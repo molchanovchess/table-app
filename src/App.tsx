@@ -1,26 +1,36 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { CircularProgress, Stack } from "@mui/material";
+import PokemonTable from './components/PokemonTable';
+import usePokemonData from './hooks/usePokemonData';
+import PaginationControl from "./components/PaginationControl";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const { loading, data, handleSort, handlePageChange, selectedPokemon, handleRowClick, offset, limit, totalPages, sortBy, sortOrder } = usePokemonData();
+
+    return (
+        <div>
+            {loading ? (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>
+                    <CircularProgress />
+                </div>
+            ) : (
+                <div className={'main-table'}>
+                    <PokemonTable
+                        data={data}
+                        handleSort={handleSort}
+                        handleRowClick={handleRowClick}
+                        selectedPokemon={selectedPokemon}
+                        sortBy={sortBy}
+                        sortOrder={sortOrder}
+                     />
+                    <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
+                        <PaginationControl totalPages={totalPages} offset={offset} limit={limit} handlePageChange={handlePageChange} />
+                    </Stack>
+                </div>
+            )}
+        </div>
+    );
 }
 
 export default App;
